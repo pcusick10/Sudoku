@@ -75,7 +75,26 @@ class Board {
       console.log("No duplicates in this chunk.");
     }
   }
+
+  populateBoard() {
+    const chunks = Array.from(document.querySelectorAll(".chunk"))
+    for(let i = 0; i < this.values.length; i++) {
+      let j = 0
+      while(j < this.values[i].length) {
+        const entry = document.createElement("div")
+        entry.classList.add("entry")
+        entry.innerHTML = `${this.values[i][j]}`
+        chunks[i].appendChild(entry)
+        j++
+      }
+    }
+    console.log(chunks)
+  }
 }
+
+const board = document.querySelector(".board");
+console.log(board);
 
 console.log("Hello world");
 var testBoard = new Board(exampleValues);
+testBoard.populateBoard()
