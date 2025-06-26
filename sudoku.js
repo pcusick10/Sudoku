@@ -48,17 +48,25 @@ var populateBoard = function (values) {
 
 var checkBoard = function () {
   const entries = Array.from(document.querySelectorAll(".entry"));
+  let won = true
 
   entries.forEach((e) => {
     let [row, col] = e.id
     let chunk = coordToChunk(row, col);
 
+    if(!e.innerHTML) {
+      won = false
+    }
+
     if (areChunkDups(chunk) || areRowDups(row) || areColumnDups(col)) {
+      won = false
       !e.classList.contains("initial") && e.classList.add("incorrect")
     } else {
       e.classList.contains("incorrect") && e.classList.remove("incorrect")
     }
   })
+
+  won && alert("You win!")
 };
 
 var areChunkDups = function (chunk) {
