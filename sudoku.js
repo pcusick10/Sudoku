@@ -1,4 +1,4 @@
-var exampleValues = [
+var boardValues = [
   [5, 3, 0, 0, 7, 0, 0, 0, 0],
   [6, 0, 0, 1, 9, 5, 0, 0, 0],
   [0, 9, 8, 0, 0, 0, 0, 6, 0],
@@ -48,25 +48,25 @@ var populateBoard = function (values) {
 
 var checkBoard = function () {
   const entries = Array.from(document.querySelectorAll(".entry"));
-  let won = true
+  let won = true;
 
   entries.forEach((e) => {
-    let [row, col] = e.id
+    let [row, col] = e.id;
     let chunk = coordToChunk(row, col);
 
-    if(!e.innerHTML) {
-      won = false
+    if (!e.innerHTML) {
+      won = false;
     }
 
     if (areChunkDups(chunk) || areRowDups(row) || areColumnDups(col)) {
-      won = false
-      !e.classList.contains("initial") && e.classList.add("incorrect")
+      won = false;
+      !e.classList.contains("initial") && e.classList.add("incorrect");
     } else {
-      e.classList.contains("incorrect") && e.classList.remove("incorrect")
+      e.classList.contains("incorrect") && e.classList.remove("incorrect");
     }
-  })
+  });
 
-  won && alert("You win!")
+  won && alert("You win!");
 };
 
 var areChunkDups = function (chunk) {
@@ -74,19 +74,19 @@ var areChunkDups = function (chunk) {
   let entryArr = [];
   for (let i = 0; i < entries.length; i++) {
     let [row, col] = entries[i].id;
-    entryArr.push(exampleValues[row][col]);
+    entryArr.push(boardValues[row][col]);
   }
   return areDuplicates(entryArr);
 };
 
 var areRowDups = function (row) {
-  return areDuplicates(exampleValues[row]);
+  return areDuplicates(boardValues[row]);
 };
 
 var areColumnDups = function (col) {
   let colArr = [];
-  for (let i = 0; i < exampleValues.length; i++) {
-    colArr.push(exampleValues[i][col]);
+  for (let i = 0; i < boardValues.length; i++) {
+    colArr.push(boardValues[i][col]);
   }
   return areDuplicates(colArr);
 };
@@ -103,21 +103,35 @@ var toggleSelected = function () {
 var inputSelected = function (e) {
   let selected = document.querySelector(".selected");
   if (selected) {
-    let [row, col] = selected.id
+    let [row, col] = selected.id;
     if (e.keyCode >= 49 && e.keyCode <= 57) {
       selected.innerHTML = e.key;
-      exampleValues[row][col] = Number(e.key)
+      boardValues[row][col] = Number(e.key);
       checkBoard();
     } else {
       selected.innerHTML = "";
-      exampleValues[row][col] = 0
-      checkBoard()
+      boardValues[row][col] = 0;
+      checkBoard();
     }
   }
 };
 
-populateBoard(exampleValues);
+var resetBoard = function () {
+  const entries = Array.from(document.querySelectorAll(".entry"));
+  entries.forEach((e) => {
+    let [row, col] = e.id;
+    if (!e.classList.contains("initial")) {
+      e.innerHTML = "";
+      boardValues[row][col] = 0;
+    }
+    checkBoard()
+  });
+};
+
+populateBoard(boardValues);
 
 const entries = document.querySelectorAll(".entry");
 entries.forEach((e) => e.addEventListener("click", toggleSelected));
 document.addEventListener("keydown", inputSelected);
+const resetButton = document.getElementById("reset");
+resetButton.addEventListener("click", resetBoard);
