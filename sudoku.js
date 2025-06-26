@@ -1,100 +1,59 @@
 var exampleValues = [
-  [1, 2, 3, 4, 5, 6, 7, 8, 9],
-  [4, 5, 6, 7, 8, 9, 1, 2, 3],
-  [7, 8, 9, 1, 2, 3, 4, 5, 6],
-  [2, 3, 1, 5, 6, 4, 8, 9, 7],
-  [5, 6, 4, 8, 9, 7, 2, 3, 1],
-  [8, 9, 7, 2, 3, 1, 5, 6, 4],
-  [3, 1, 2, 6, 4, 5, 9, 7, 8],
-  [6, 4, 5, 9, 7, 8, 3, 1, 2],
-  [9, 7, 8, 3, 1, 2, 6, 4, 5],
+  [0, 0, 0, 6, 8, 0, 1, 9, 0],
+  [2, 6, 0, 0, 7, 0, 0, 0, 4],
+  [7, 0, 1, 0, 9, 0, 5, 0, 0],
+  [8, 2, 0, 0, 0, 4, 0, 5, 0],
+  [1, 0, 0, 6, 0, 2, 0, 0, 3],
+  [0, 4, 0, 9, 0, 0, 0, 2, 8],
+  [0, 0, 9, 0, 4, 0, 7, 0, 3],
+  [3, 0, 0, 0, 5, 0, 0, 1, 8],
+  [0, 7, 4, 0, 3, 6, 0, 0, 0],
 ];
 
-class Board {
-  constructor(values) {
-    this.values = values;
-  }
-
-  checkRow(rowIndex) {
-    let row = this.values[rowIndex];
-    let acc = [];
-    let dup = [];
-    for (let i = 0; i < row.length; i++) {
-      if (acc.includes(row[i])) {
-        dup.push(row[i]);
-      }
+var populateBoard = function (values) {
+  const chunks = Array.from(document.querySelectorAll(".chunk"));
+  for (let i = 0; i < values.length; i++) {
+    let j = 0;
+    while (j < values[i].length) {
+      const entry = document.createElement("div");
+      entry.classList.add("entry");
+      values[i][j] && entry.classList.add("initial");
+      entry.id = `${i}${j}`;
+      entry.innerHTML = `${values[i][j] ? values[i][j] : ""}`;
+      chunks[i].appendChild(entry);
+      j++;
     }
-    if (dup.length) {
-      console.log(
-        `Duplicates found at indices ${dup.join(", ")} of row ${rowIndex}.`
-      );
+  }
+};
+
+var checkChunk = function () {};
+
+var checkRow = function () {};
+
+var checkColumn = function () {};
+
+var toggleSelected = function () {
+  entries.forEach((e) => {
+    if (e.classList.contains("selected")) {
+      e.classList.remove("selected");
+    }
+  });
+  !this.classList.contains("initial") && this.classList.add("selected");
+};
+
+var inputSelected = function (e) {
+  let selected = document.querySelector(".selected");
+  if (selected) {
+    if (e.keyCode >= 49 && e.keyCode <= 57) {
+      selected.innerHTML = e.key;
     } else {
-      console.log("No duplicates in this row.");
+      selected.innerHTML = "";
     }
   }
+};
 
-  checkColumn(colIndex) {
-    let col = this.values.map((row) => row[colIndex]);
-    let acc = [];
-    let dup = [];
-    for (let i = 0; i < col.length; i++) {
-      if (acc.includes(col[i])) {
-        dup.push(col[i]);
-      }
-    }
-    if (dup.length) {
-      console.log(
-        `Duplicates found at indices ${dup.join(", ")} of column ${colIndex}.`
-      );
-    } else {
-      console.log("No duplicates in this column.");
-    }
-  }
+populateBoard(exampleValues);
 
-  checkChunk(chunkNum) {
-    let chunk = [];
-    let acc = [];
-    let dup = [];
-    let startingRow = chunkNum - (chunkNum % 3);
-    let startingCol = (chunkNum % 3) * 3;
-    for (let row = startingRow; row <= startingRow + 3; row++) {
-      for (let col = startingCol; col <= startingCol + 3; col++) {
-        chunk.push(this.values[row][col]);
-      }
-    }
-    for (let i = 0; i < chunk.length; i++) {
-      if (acc.includes(chunk[i])) {
-        dup.push(chunk[i]);
-      }
-    }
-    if (dup.length) {
-      console.log(
-        `Duplicates found at indices ${dup.join(", ")} of chunk ${chunkNum}.`
-      );
-    } else {
-      console.log("No duplicates in this chunk.");
-    }
-  }
-
-  populateBoard() {
-    const chunks = Array.from(document.querySelectorAll(".chunk"))
-    for(let i = 0; i < this.values.length; i++) {
-      let j = 0
-      while(j < this.values[i].length) {
-        const entry = document.createElement("div")
-        entry.classList.add("entry")
-        entry.innerHTML = `${this.values[i][j]}`
-        chunks[i].appendChild(entry)
-        j++
-      }
-    }
-    console.log(chunks)
-  }
-}
-
-const board = document.querySelector(".board");
-console.log(board);
-
-console.log("Hello world");
-var testBoard = new Board(exampleValues);
-testBoard.populateBoard()
+const entries = document.querySelectorAll(".entry");
+entries.forEach((e) => e.addEventListener("click", toggleSelected));
+document.addEventListener("keydown", inputSelected);
