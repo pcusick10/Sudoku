@@ -30,3 +30,7 @@
 .initial {
     background-color: gray;
 }
+
+.incorrect {
+    background-color: red;
+}
